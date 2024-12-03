@@ -21,6 +21,24 @@ app.post("/accounts", (req, res) => {
   res.status(201).json(newAccount);
 });
 
+const deleteAccount = (accountIdToBeDeleted) => {
+  const newAccount = accounts.filter(
+    (account) => account.id != accountIdToBeDeleted
+  );
+  console.log("My new books are: ", newAccount);
+};
+
+app.delete("/accounts/:accountId", (req, res) => {
+  const { accountId } = req.params;
+  const account = accounts.find((account) => account.id == accountId);
+  if (account) {
+    deleteAccount(accountId);
+    res.status(204).end();
+  } else {
+    res.status(404).json();
+  }
+});
+
 app.listen(port, () => {
   console.log(`The application is running on localhost:${port}`);
 });
