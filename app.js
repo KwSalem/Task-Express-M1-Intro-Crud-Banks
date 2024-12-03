@@ -39,6 +39,22 @@ app.delete("/accounts/:accountId", (req, res) => {
   }
 });
 
+const updateAccount = (currentAccount, newData) => {
+  const myUpdatedAccount = Object.assign(currentAccount, newData);
+  return myUpdatedAccount;
+};
+
+app.put("/accounts/:accountId", (req, res) => {
+  const { accountId } = req.params;
+  const account = accounts.find((account) => account.id == accountId);
+  if (account) {
+    const UpdatedAccount = updateAccount(account, req.body);
+    res.status(200).json(UpdatedAccount);
+  } else {
+    res.status(404).json();
+  }
+});
+
 app.listen(port, () => {
   console.log(`The application is running on localhost:${port}`);
 });
