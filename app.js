@@ -4,9 +4,9 @@ const port = 8000;
 app.use(express.json());
 const accounts = require("./accounts");
 
-app.get("/accounts", (req, res) => {
-  res.send(accounts);
-});
+// app.get("/accounts", (req, res) => {
+//   res.send(accounts);
+// });
 
 const createNewAccount = (newAccountData) => {
   console.log("Creating new Account", newAccountData);
@@ -53,6 +53,22 @@ app.put("/accounts/:accountId", (req, res) => {
   } else {
     res.status(404).json();
   }
+});
+
+app.get("/accounts", (req, res) => {
+  // Accessing query parameters
+  const username = req.query.username;
+  const funds = req.query.funds;
+
+  console.log(`Username: ${username}, Funds: ${funds}`);
+  let result = accounts;
+  if (username) {
+    result = result.filter((account) => account.username.includes(username));
+  }
+  if (funds) {
+    result = result.filter((account) => account.funds == funds);
+  }
+  res.json(result);
 });
 
 app.listen(port, () => {
