@@ -1,64 +1,89 @@
-const accounts = require("../../accounts");
+// const accounts = require("../../accounts");
+const Account = require("../../models/Account");
 
-exports.listAccountsController = (req, res) => {
-  const username = req.query.username;
-  const funds = req.query.funds;
-
-  let result = accounts;
-  if (username) {
-    result = result.filter((account) => account.username.includes(username));
+// This function is responsible for listing all accounts
+exports.listAccountsController = async (req, res) => {
+  try {
+    const accounts = await Account.find().select("-createdAt -updatedAt");
+    res.json(accounts);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
-  if (funds) {
-    result = result.filter((account) => account.funds == funds);
-  }
-  res.json(result);
 };
 
-exports.getAccountByIdController = (req, res) => {
+// This function is responsible for retrieving a single account
+exports.getAccountByIdController = async (req, res) => {
   const { accountId } = req.params;
-  const account = accounts.find((account) => account.id == accountId);
+  const account = await Account.findById(accountId);
   if (account) {
     res.status(200).json(account);
   } else {
     res.status(404).json({ error: "Account not found" });
   }
 };
-const createNewAccount = (newAccountData) => {
-  console.log("Creating new Account", newAccountData);
-  const newId = accounts.length + 1;
-  const newAccount = Object.assign({ id: newId }, newAccountData);
-  console.log("My new account is: ", newAccount);
-  return newAccount;
-};
-exports.createAccountController = (req, res) => {
-  const newAccount = createNewAccount(req.body);
-  res.status(201).json(newAccount);
-};
 
-exports.updateAccountController = (req, res) => {
-  const { accountId } = req.params;
-  const account = accounts.find((account) => account.id == accountId);
-  if (account) {
-    const UpdatedAccount = updateAccount(account, req.body);
-    res.status(200).json(UpdatedAccount);
-  } else {
-    res.status(404).json({ error: "Account not found" });
+// This function is responsible for creating a new account
+exports.createAccountController = async (req, res) => {
+  try {
+    const newAccount = await Account.create(req.body);
+    res.status(201).json(newAccount);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
-const deleteAccount = (accountIdToBeDeleted) => {
-  const newAccount = accounts.filter(
-    (account) => account.id != accountIdToBeDeleted
-  );
-  console.log("My new books are: ", newAccount);
+
+// This function is responsible for retrieving VIP accounts
+// It takes a minBalance query parameter
+// Returns a list of accounts with funds greater than the specified minBalance
+exports.getVIPAccountsController = async (req, res) => {
+  try {
+    const minBalance = parseInt(req.query.minBalance);
+
+    if (isNaN(minBalance)) {
+      return res.status(400).json({
+        error: "Invalid minBalance query parameter. Must be an integer.",
+      });
+    }
+    const vipAccounts = await Account.find({
+      funds: { $gt: minBalance },
+    }).select("-createdAt -updatedAt");
+    res.json(vipAccounts);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
-exports.deleteAccountController = (req, res) => {
-  const { accountId } = req.params;
-  const account = accounts.find((account) => account.id == accountId);
-  if (account) {
-    deleteAccount(accountId);
-    res.status(204).end();
-  } else {
-    res.status(404).json({ error: "Account not found" });
+// This function is responsible for updating an existing account
+exports.updateAccountController = async (req, res) => {
+  console.log(req.body);
+  try {
+    const accountId = req.params.accountId;
+    const foundAccount = await Account.findById(accountId);
+
+    if (foundAccount) {
+      await foundAccount.updateOne(req.body);
+      res.status(204).end();
+    } else {
+      res.status(404).json({ error: "This account doesn't exist" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// This function is responsible for deleting an existing account
+exports.deleteAccountController = async (req, res) => {
+  try {
+    const accountId = req.params.accountId;
+    const foundAccount = await Account.findById(accountId);
+
+    if (foundAccount) {
+      await foundAccount.deleteOne();
+      res.status(204).end();
+    } else {
+      res.status(404).json({ error: "This account doesn't exist" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
