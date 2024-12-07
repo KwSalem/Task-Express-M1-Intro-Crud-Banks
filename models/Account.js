@@ -12,16 +12,7 @@ const accountSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    // Add other fields as needed, for example:
-    email: {
-      type: String,
-      required: [true, "Email is required"],
-      unique: true,
-    },
-    password: {
-      type: String,
-      required: [true, "Password is required"],
-    },
+    // // Add other fields as needed, for example:
   },
   {
     timestamps: true, // This will add createdAt and updatedAt fields

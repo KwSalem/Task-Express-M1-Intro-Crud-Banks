@@ -11,7 +11,7 @@ exports.listAccountsController = async (req, res) => {
   }
 };
 
-// This function is responsible for retrieving a single account
+// This function is responsible for retrieving a single account by ID
 exports.getAccountByIdController = async (req, res) => {
   const { accountId } = req.params;
   const account = await Account.findById(accountId);
