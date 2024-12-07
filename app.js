@@ -8,7 +8,7 @@ app.use(express.json());
 
 app.use("/api/accounts", accountRouter);
 
-connectDb();
+connectDb().catch((err) => console.error(err));
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

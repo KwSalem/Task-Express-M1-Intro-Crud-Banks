@@ -8,12 +8,13 @@ const {
   updateAccountController,
   deleteAccountController,
   getVIPAccountsController,
+  getAccountByUsernameController,
 } = require("./controllers");
 
 // This route is responsible for listing all accounts
 router.get("/", listAccountsController);
 
-// This route is responsible for retrieving a single account by username and optional funds query string
+// This route is responsible for retrieving a single account by id
 router.get("/:accountId", getAccountByIdController);
 
 // This route is responsible for retrieving VIP accounts

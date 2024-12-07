@@ -7,7 +7,8 @@ exports.listAccountsController = async (req, res) => {
     const accounts = await Account.find().select("-createdAt -updatedAt");
     res.json(accounts);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json();
+    console.log(error.message);
   }
 };
 
@@ -18,7 +19,8 @@ exports.getAccountByIdController = async (req, res) => {
   if (account) {
     res.status(200).json(account);
   } else {
-    res.status(404).json({ error: "Account not found" });
+    res.status(404).json();
+    console.log(error.message);
   }
 };
 
@@ -28,7 +30,8 @@ exports.createAccountController = async (req, res) => {
     const newAccount = await Account.create(req.body);
     res.status(201).json(newAccount);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json();
+    console.log(error.message);
   }
 };
 
@@ -49,7 +52,8 @@ exports.getVIPAccountsController = async (req, res) => {
     }).select("-createdAt -updatedAt");
     res.json(vipAccounts);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json();
+    console.log(error.message);
   }
 };
 
@@ -67,7 +71,8 @@ exports.updateAccountController = async (req, res) => {
       res.status(404).json({ error: "This account doesn't exist" });
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json();
+    console.log(error.message);
   }
 };
 
@@ -84,6 +89,7 @@ exports.deleteAccountController = async (req, res) => {
       res.status(404).json({ error: "This account doesn't exist" });
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json();
+    console.log(error.message);
   }
 };
