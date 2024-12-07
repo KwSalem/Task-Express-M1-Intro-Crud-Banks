@@ -8,7 +8,6 @@ const {
   updateAccountController,
   deleteAccountController,
   getVIPAccountsController,
-  getAccountByUsernameController,
 } = require("./controllers");
 
 // This route is responsible for listing all accounts
